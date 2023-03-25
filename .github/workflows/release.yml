@@ -4,8 +4,19 @@ on:
 name: Handle Release
 jobs:
   generate:
-    name: Create release-artifacts
-    runs-on: ubuntu-latest
+    name: Create release-artifacts ${{ matrix.version }} - ${{ matrix.os }} - ${{ matrix.arch }} 
+    runs-on: ${{ matrix.os }}
+    strategy:
+      fail-fast: false
+      matrix:
+        version:
+          - '1.8'
+          - 'nightly'
+        os:
+          - ubuntu-latest
+          - macOS-latest
+        arch:
+          - x64
     steps:
     - uses: actions/checkout@master
     - name: Pkg.add("PackageCompiler")
@@ -19,4 +30,4 @@ jobs:
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       with:
-        args: 'norganic.tar.gz'
+        args: 'norganic-${{matrix.os}}-${{matrix.arch}}.tar.gz'
