@@ -1,0 +1,10 @@
+name = "norganic"
+
+[install]
+completion = true
+quiet = false
+optimize = 2
+
+[application]
+incremental=true
+filter_stdlibs=false
