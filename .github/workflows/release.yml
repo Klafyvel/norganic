@@ -8,10 +8,6 @@ jobs:
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@master
-    - name: Build
-      uses: skx/github-action-build@master
-      with:
-        builder: .github/build
     - name: Pkg.add("PackageCompiler")
       run: julia -e 'using Pkg; Pkg.add("PackageCompiler")'
     - name: Compile
