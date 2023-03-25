@@ -11,7 +11,7 @@ jobs:
     - name: Pkg.add("PackageCompiler")
       run: julia -e 'using Pkg; Pkg.add("PackageCompiler")'
     - name: Compile
-      run: julia -e 'using PackageCompiler; create_app("..", "norganic")'
+      run: julia -e 'using PackageCompiler; create_app(".", "norganic")'
     - name: Archive
       run: tar -cvzf norganic.tar.gz norganic
     - name: Upload the artifacts
