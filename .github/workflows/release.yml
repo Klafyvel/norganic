@@ -30,7 +30,7 @@ jobs:
         -sSL \
         -XPOST \
         -H "Authorization: token ${{secrets.GITHUB_TOKEN}}" \
-        --upload-file "norganic-${{matrix.os}}-${{matrix.arch}}.tar.gz" \
+        --data-binary "@norganic-${{matrix.os}}-${{matrix.arch}}.tar.gz" \
         --header "Content-Type:application/octet-stream" \
         "https://uploads.github.com/repos/${env:GITHUB_REPOSITORY}/releases/${env:RELEASE_ID}/assets?name=norganic-${{matrix.os}}-${{matrix.arch}}.tar.gz"
   generate-windows:
