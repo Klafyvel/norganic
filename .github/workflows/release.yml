@@ -19,22 +19,14 @@ jobs:
           - x64
     steps:
       - uses: actions/checkout@master
-      - name: Install curl on Windows
-        run: choco install curl
-        if: matrix.os == 'windows-latest'
-      - name: Install make on Windows
-        run: choco install make
-        if: matrix.os == 'windows-latest'
       - name: Archive
-        if: matrix.os != 'windows-latest'
         run: |
-          make archive
+          make -e archive
           echo "archive=$NORGANIC_ARCHIVE" >> $GITHUB_ENV
         env:
-          NORGANIC_ARCHIVE: norganic-${{matrix.os}}-${{matrix.arch}}${{ matrix.os == 'windows-latest' && '.tar.gz' || '.zip' }}
+          NORGANIC_ARCHIVE: norganic-${{matrix.os}}-${{matrix.arch}}${{ matrix.os != 'windows-latest' && '.tar.gz' || '.zip' }}
       - name: Upload release 
         uses: softprops/action-gh-release@v1
-        if: matrix.os != 'windows-latest'
         with:
           files: ${{ env.archive }}
           tag_name: ${{github.event.release.tag_name}}
