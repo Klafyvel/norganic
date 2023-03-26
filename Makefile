@@ -26,7 +26,7 @@ build/norganic:
 
 $(NORGANIC_ARCHIVE): norganic
 ifeq ($(OS),Windows_NT)
-	Compress-Archive -Path build/norganic -DestinationPath $(NORGANIC_ARCHIVE)
+	Compress-Archive -Path build\norganic -DestinationPath $(NORGANIC_ARCHIVE)
 else
 	tar -cvzf $(NORGANIC_ARCHIVE) build/norganic
 endif
