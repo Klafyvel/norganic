@@ -10,6 +10,8 @@ Norg = "64228516-68de-4e23-8112-6940bc1970d1"
 
 [compat]
 JSON = "0.21"
+Norg = "0.2"
+Comonicon = "1"
 julia = "1"
 
 [extras]
