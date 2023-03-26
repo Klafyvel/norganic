@@ -22,12 +22,11 @@ jobs:
       - name: Archive
         run: |
           make -e archive
-          echo "archive=$NORGANIC_ARCHIVE" >> $GITHUB_ENV
         env:
           NORGANIC_ARCHIVE: norganic-${{matrix.os}}-${{matrix.arch}}${{ matrix.os != 'windows-latest' && '.tar.gz' || '.zip' }}
       - name: Upload release 
         uses: softprops/action-gh-release@v1
         with:
-          files: ${{ env.archive }}
+          files: norganic-${{matrix.os}}-${{matrix.arch}}${{ matrix.os != 'windows-latest' && '.tar.gz' || '.zip' }}
           tag_name: ${{github.event.release.tag_name}}
           name: ${{github.event.release.name}}
