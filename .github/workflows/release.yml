@@ -14,52 +14,36 @@ jobs:
         os:
           - ubuntu-latest
           - macOS-latest
-        arch:
-          - x64
-    steps:
-    - uses: actions/checkout@master
-    - name: Pkg.add("PackageCompiler")
-      run: julia -e 'using Pkg; Pkg.add("PackageCompiler")'
-    - name: Compile
-      run: julia -e 'using PackageCompiler; create_app(".", "norganic")'
-    - name: Archive
-      run: tar -cvzf norganic-${{matrix.os}}-${{matrix.arch}}.tar.gz norganic
-    - name: Upload the artifacts
-      run: |
-        curl \
-        -sSL \
-        -XPOST \
-        -H "Authorization: token ${{secrets.GITHUB_TOKEN}}" \
-        --data-binary "@norganic-${{matrix.os}}-${{matrix.arch}}.tar.gz" \
-        --header "Content-Type:application/octet-stream" \
-        "https://uploads.github.com/repos/${env:GITHUB_REPOSITORY}/releases/${env:RELEASE_ID}/assets?name=norganic-${{matrix.os}}-${{matrix.arch}}.tar.gz"
-  generate-windows:
-    name: Create release-artifacts ${{ matrix.version }} - ${{ matrix.os }} - ${{ matrix.arch }} 
-    runs-on: ${{ matrix.os }}
-    strategy:
-      fail-fast: false
-      matrix:
-        version:
-          - 'nightly'
-        os:
           - windows-latest
         arch:
           - x64
     steps:
-    - uses: actions/checkout@master
-    - name: Pkg.add("PackageCompiler")
-      run: julia -e 'using Pkg; Pkg.add("PackageCompiler")'
-    - name: Compile
-      run: julia -e 'using PackageCompiler; create_app(".", "norganic")'
-    - name: Archive
-      run: Compress-Archive -Path norganic -DestinationPath norganic-${{matrix.os}}-${{matrix.arch}}.zip
-    - name: Upload the artifacts
-      run: |
-        iwr -useb get.scoop.sh -outfile 'install.ps1'
-        .\install.ps1 -RunAsAdmin
-        scoop update
-        scoop install curl
-        scoop install jq
-        $env:RELEASE_ID = jq --raw-output ".release.id" "${env:GITHUB_EVENT_PATH}"
-        curl.exe -X "POST" -H "Authorization: token ${{secrets.GITHUB_TOKEN}}" --upload-file "${{github.workspace}}/build/norganic-${{matrix.os}}-${{matrix.arch}}.zip" --header "Content-Type:application/octet-stream" "https://uploads.github.com/repos/${env:GITHUB_REPOSITORY}/releases/${env:RELEASE_ID}/assets?name=norganic-${{matrix.os}}-${{matrix.arch}}.zip"
-
+      - uses: actions/checkout@master
+      - name: Install curl on Windows
+        run: choco install curl
+        if: matrix.os == 'windows-latest'
+      - name: Install make on Windows
+        run: choco install make
+        if: matrix.os == 'windows-latest'
+      - name: Archive
+        if: matrix.os != 'windows-latest'
+        run: make archive
+        env:
+          NORGANIC_ARCHIVE: norganic-${{matrix.os}}-${{matrix.arch}}.tar.gz
+      - name: Archive on Windows
+        if: matrix.os == 'windows-latest'
+        run: make archive
+        env:
+          NORGANIC_ARCHIVE: norganic-${{matrix.os}}-${{matrix.arch}}.zip
+      - name: Upload the artifacts
+        if: matrix.os != 'windows-latest'
+        run: make upload
+        env:
+          GITHUB_TOKEN: ${{secrets.GITHUB_TOKEN}}
+          NORGANIC_ARCHIVE: norganic-${{matrix.os}}-${{matrix.arch}}.tar.gz
+      - name: Upload the artifacts on Windows
+        if: matrix.os == 'windows-latest'
+        run: make upload
+        env:
+          GITHUB_TOKEN: ${{secrets.GITHUB_TOKEN}}
+          NORGANIC_ARCHIVE: norganic-${{matrix.os}}-${{matrix.arch}}.zip
