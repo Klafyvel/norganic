@@ -9,6 +9,7 @@ JSON = "682c06a0-de6a-54ab-a142-c8b1cf79cde6"
 Norg = "64228516-68de-4e23-8112-6940bc1970d1"
 
 [compat]
+Comonicon = "1"
 julia = "1"
 
 [extras]
