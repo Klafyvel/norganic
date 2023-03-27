@@ -10,7 +10,7 @@ Convert Norg to HTML.
 function _html(input::IO, output::IO)
     s = read(input, String)
     res = norg(HTMLTarget(), s)
-    write(output, s)
+    write(output, string(res))
 end
 
 function _html(input::IO, output::String)
@@ -70,5 +70,18 @@ end
 Your solvent-free Norg compiler.
 """
 @main
+
+using SnoopPrecompile
+
+@precompile_setup begin
+    output_file = tempname()
+    input_file = Norg.NORG_SPEC_PATH
+    @precompile_all_calls begin
+        # all calls in this block will be precompiled, regardless of whether
+        # they belong to your package or not (on Julia 1.8 and higher)
+        html(input=input_file, output=output_file)
+        json(input=input_file, output=output_file)
+    end
+end
 
 end

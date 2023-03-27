@@ -1,12 +1,13 @@
 name = "Norganic"
 uuid = "dfab6fa2-2962-42ba-9a10-aa3aeb79a0e4"
 authors = ["Hugo Levy-Falk <klafyvel@klafyvel.me> and contributors"]
-version = "0.1.15"
+version = "0.1.17"
 
 [deps]
 Comonicon = "863f3e99-da2a-4334-8734-de3dacbe5542"
 JSON = "682c06a0-de6a-54ab-a142-c8b1cf79cde6"
 Norg = "64228516-68de-4e23-8112-6940bc1970d1"
+SnoopPrecompile = "66db9d55-30c0-4569-8b51-7e840670fc0c"
 
 [compat]
 Comonicon = "1"
